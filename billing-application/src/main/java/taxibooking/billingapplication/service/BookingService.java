@@ -13,6 +13,8 @@ import taxibooking.billingapplication.repository.TaxiRepository;
 import taxibooking.billingapplication.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +40,18 @@ public class BookingService {
                 .build();
         Booking savedBooking = bookingRepository.save(booking);
         return modelMapper.map(savedBooking, BookingResponse.class);
-//        return bookingRepository.save(modelMapper.map(booking, BookingResponse.class));
-
-//        Booking booking = bookingRepository.save(modelMapper.map(request, Booking.class));
-//        return modelMapper.map(booking, BookingResponse.class);
+    }
+    public List<BookingResponse> viewBookingDetails(){
+        List<Booking> bookings = bookingRepository.findAll();
+        return bookings.stream()
+                .map(booking -> modelMapper.map(booking, BookingResponse.class))
+                .collect(Collectors.toList());
+    }
+    public void cancelBooking(long id){
+        if (!bookingRepository.existsById(id)){
+            throw new RuntimeException("Booking not found");
+        }
+        bookingRepository.deleteById(id);
     }
 
 }
