@@ -14,6 +14,7 @@ import taxibooking.billingapplication.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +25,9 @@ public class BookingService {
     private final TaxiRepository taxiRepository;
     private final ModelMapper modelMapper;
 
-    public BookingResponse createBooking(long userId,long taxiId, BookingRequest request){
+    private static final double RATE_PER_KM = 0.5;
+
+    public BookingResponse createBooking(long userId, long taxiId, BookingRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Taxi taxi = taxiRepository.findById(taxiId)
@@ -41,17 +44,35 @@ public class BookingService {
         Booking savedBooking = bookingRepository.save(booking);
         return modelMapper.map(savedBooking, BookingResponse.class);
     }
-    public List<BookingResponse> viewBookingDetails(){
+
+    public List<BookingResponse> viewBookingDetails() {
         List<Booking> bookings = bookingRepository.findAll();
         return bookings.stream()
                 .map(booking -> modelMapper.map(booking, BookingResponse.class))
                 .collect(Collectors.toList());
     }
-    public void cancelBooking(long id){
-        if (!bookingRepository.existsById(id)){
+
+    public void cancelBooking(long id) {
+        if (!bookingRepository.existsById(id)) {
             throw new RuntimeException("Booking not found");
         }
         bookingRepository.deleteById(id);
+    }
+
+    public void completedTrip(long userId, double distance) {
+        Optional<User> user = userRepository.findById(userId);
+        double accountBalance = user.get().getAccountBalance();
+        double fare = distance * RATE_PER_KM;
+        if (accountBalance >= fare) {
+            double newBalance = accountBalance - fare;
+            User user1 = User.builder()
+                    .accountBalance(newBalance)
+                    .build();
+            userRepository.save(user1);
+            System.out.println("Ride completed");
+        } else {
+            System.out.println("Insufficient balance");
+        }
     }
 
 }

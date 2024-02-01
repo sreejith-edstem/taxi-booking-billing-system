@@ -28,7 +28,7 @@ public class Booking {
     private Taxi taxiId;
     private String pickupLocation;
     private String dropOffLocation;
-    private long fare;
+    private double fare;
     private LocalDateTime bookingTime;
     private Status status;
 }

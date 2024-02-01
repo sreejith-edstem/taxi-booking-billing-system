@@ -15,7 +15,7 @@ import taxibooking.billingapplication.constant.Status;
 public class BookingRequest {
     private String pickupLocation;
     private String dropOffLocation;
-    private long fare;
+    private double fare;
     @Enumerated(EnumType.STRING)
     private Status status;
 }
