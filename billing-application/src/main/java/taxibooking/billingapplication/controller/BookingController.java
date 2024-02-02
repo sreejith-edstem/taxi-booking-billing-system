@@ -25,9 +25,13 @@ public class BookingController {
     public @ResponseBody BookingResponse createBooking(@PathVariable long userId, @PathVariable long taxiId, @RequestBody BookingRequest request){
         return this.bookingService.createBooking(userId,taxiId,request);
     }
+    @GetMapping("/{id}")
+    public @ResponseBody BookingResponse viewBookingDetailsById(@PathVariable long id){
+        return bookingService.viewBookingDetailsById(id);
+    }
     @GetMapping
-    public @ResponseBody List<BookingResponse> viewBookingDetails(){
-        return bookingService.viewBookingDetails();
+    public @ResponseBody List<BookingResponse> viewAllBookingDetails(){
+        return bookingService.viewAllBookingDetails();
     }
     @DeleteMapping("/{id}")
     public void cancelBooking(@PathVariable long id){

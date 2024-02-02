@@ -3,6 +3,7 @@ package taxibooking.billingapplication.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import taxibooking.billingapplication.constant.Status;
 import taxibooking.billingapplication.contract.request.BookingRequest;
 import taxibooking.billingapplication.contract.response.BookingResponse;
 import taxibooking.billingapplication.model.Booking;
@@ -32,6 +33,8 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Taxi taxi = taxiRepository.findById(taxiId)
                 .orElseThrow(() -> new RuntimeException("Taxi not found"));
+//        Taxi taxi1 = (Taxi) taxiRepository.findNearestAvailableTaxi(request.getPickupLocation())
+//                .orElseThrow(() -> new RuntimeException("No available taxis"));
         Booking booking = Booking.builder()
                 .userId(user)
                 .taxiId(taxi)
@@ -39,13 +42,18 @@ public class BookingService {
                 .fare(request.getFare())
                 .pickupLocation(request.getPickupLocation())
                 .dropOffLocation(request.getDropOffLocation())
-                .status(request.getStatus())
+                .status(Status.PENDING)
                 .build();
         Booking savedBooking = bookingRepository.save(booking);
         return modelMapper.map(savedBooking, BookingResponse.class);
     }
+    public BookingResponse viewBookingDetailsById(long id){
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        return modelMapper.map(booking, BookingResponse.class);
+    }
 
-    public List<BookingResponse> viewBookingDetails() {
+    public List<BookingResponse> viewAllBookingDetails() {
         List<Booking> bookings = bookingRepository.findAll();
         return bookings.stream()
                 .map(booking -> modelMapper.map(booking, BookingResponse.class))
@@ -74,5 +82,23 @@ public class BookingService {
             System.out.println("Insufficient balance");
         }
     }
-
+//public BookingResponse book(Long userId, Long taxiId, Long distance, BookingRequest bookingRequest) {
+//    Taxi taxi = taxiRepository.findById(taxiId).orElseThrow(() -> new RuntimeException("Taxi not found"));
+//    User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+//
+//    Double minimumCharge = 10.00;
+//    Double fare = distance * minimumCharge;
+//
+//    Booking booking = Booking.builder()
+//            .pickupLocation(bookingRequest.getPickupLocation())
+//            .dropOffLocation(bookingRequest.getDropOffLocation())
+//            .fare(fare)
+//            .taxiId(taxi.getTaxiId())
+//            .userId(user.getUserId())
+//            .bookingTime(LocalDateTime.now())
+//            .status(Status.CONFIRMED)
+//            .build();
+//    booking = bookingRepository.save(booking);
+//    return modelMapper.map(booking, BookingResponse.class);
+//}
 }
