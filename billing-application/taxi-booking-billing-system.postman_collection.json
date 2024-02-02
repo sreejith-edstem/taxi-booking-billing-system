@@ -120,13 +120,13 @@
 				"auth": {
 					"type": "bearer",
 					"bearer": {
-						"token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsInN1YiI6InN2enJ1bmVlQGdtYWlsLmNvbSIsImlhdCI6MTcwNjc5Mzc1OSwiZXhwIjoxNzA2ODgwMTU5fQ.Zl8adB69BFS_yFHCYK7Dh4dv49m_F-hQuCQ5gKu7HPc"
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6InN2enJ1bmVlQGdtYWlsLmNvbSIsImlhdCI6MTcwNjg0Njk2NSwiZXhwIjoxNzA2OTMzMzY1fQ.Ezp6OBm_M__GlcOPagnz-TtpH9B7NFjrLLVfQyENIG4"
 					}
 				},
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/v1/user/booking/1/complete?distance=210",
+					"raw": "http://localhost:8080/v1/user/booking/1/fare?distance=21",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -137,15 +137,45 @@
 						"user",
 						"booking",
 						"1",
-						"complete"
+						"fare"
 					],
 					"query": [
 						{
 							"key": "distance",
-							"value": "210"
+							"value": "21"
 						}
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "view-booking-details-by-id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6InN2enJ1bmVlQGdtYWlsLmNvbSIsImlhdCI6MTcwNjg0Njk2NSwiZXhwIjoxNzA2OTMzMzY1fQ.Ezp6OBm_M__GlcOPagnz-TtpH9B7NFjrLLVfQyENIG4"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/v1/user/booking/1"
+			},
+			"response": []
+		},
+		{
+			"name": "confirm-booking",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInN1YiI6ImdodHl0QGdtYWlsLmNvbSIsImlhdCI6MTcwNjg1NTAwNiwiZXhwIjoxNzA2OTQxNDA2fQ.viAKAUZMioXGoDEPmlc-jIyPhvoR6lW_s_N7C_ywf9Y"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"url": "http://localhost:8080/v1/user/booking/confirm/1"
 			},
 			"response": []
 		}
