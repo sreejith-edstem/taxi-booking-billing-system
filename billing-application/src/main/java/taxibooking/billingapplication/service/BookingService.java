@@ -82,5 +82,21 @@ public class BookingService {
             System.out.println("Insufficient balance");
         }
     }
+    public long confirmBooking(long bookingId){
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        booking = Booking.builder()
+                .id(booking.getId())
+                .bookingTime(booking.getBookingTime())
+                .pickupLocation(booking.getPickupLocation())
+                .dropOffLocation(booking.getDropOffLocation())
+                .fare(booking.getFare())
+                .status(Status.CONFIRMED)
+                .taxiId(booking.getTaxiId())
+                .userId(booking.getUserId())
+                .build();
+        bookingRepository.save(booking);
+        return bookingId;
+    }
 
 }
