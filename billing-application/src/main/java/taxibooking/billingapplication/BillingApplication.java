@@ -1,5 +1,7 @@
 package taxibooking.billingapplication;
 
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.OpenAPI;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
 import org.springframework.boot.SpringApplication;
@@ -11,6 +13,15 @@ public class BillingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BillingApplication.class, args);
+	}
+	@Bean
+	public OpenAPI openAPI() {
+		return new OpenAPI()
+				.info(
+						new Info()
+								.title("TaxiBookingBillingApplication")
+								.description("Agile Method")
+								.version("1.0"));
 	}
 	@Bean
 	public ModelMapper modelMapper(){

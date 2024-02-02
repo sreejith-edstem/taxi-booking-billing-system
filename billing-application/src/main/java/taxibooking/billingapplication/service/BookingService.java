@@ -82,23 +82,19 @@ public class BookingService {
             System.out.println("Insufficient balance");
         }
     }
-//public BookingResponse book(Long userId, Long taxiId, Long distance, BookingRequest bookingRequest) {
-//    Taxi taxi = taxiRepository.findById(taxiId).orElseThrow(() -> new RuntimeException("Taxi not found"));
-//    User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-//
-//    Double minimumCharge = 10.00;
-//    Double fare = distance * minimumCharge;
-//
-//    Booking booking = Booking.builder()
-//            .pickupLocation(bookingRequest.getPickupLocation())
-//            .dropOffLocation(bookingRequest.getDropOffLocation())
-//            .fare(fare)
-//            .taxiId(taxi.getTaxiId())
-//            .userId(user.getUserId())
-//            .bookingTime(LocalDateTime.now())
-//            .status(Status.CONFIRMED)
-//            .build();
-//    booking = bookingRepository.save(booking);
-//    return modelMapper.map(booking, BookingResponse.class);
-//}
+public BookingResponse tripCompleted(Long userId, long taxiId, Long distance, BookingRequest bookingRequest) {
+
+    Double minimumCharge = 10.00;
+    Double fare = distance * minimumCharge;
+
+    Booking booking = Booking.builder()
+            .pickupLocation(bookingRequest.getPickupLocation())
+            .dropOffLocation(bookingRequest.getDropOffLocation())
+            .fare(fare)
+            .bookingTime(LocalDateTime.now())
+            .status(Status.CONFIRMED)
+            .build();
+    booking = bookingRepository.save(booking);
+    return modelMapper.map(booking, BookingResponse.class);
+}
 }
