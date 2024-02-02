@@ -33,8 +33,6 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Taxi taxi = taxiRepository.findById(taxiId)
                 .orElseThrow(() -> new RuntimeException("Taxi not found"));
-//        Taxi taxi1 = (Taxi) taxiRepository.findNearestAvailableTaxi(request.getPickupLocation())
-//                .orElseThrow(() -> new RuntimeException("No available taxis"));
         Booking booking = Booking.builder()
                 .userId(user)
                 .taxiId(taxi)
@@ -47,7 +45,8 @@ public class BookingService {
         Booking savedBooking = bookingRepository.save(booking);
         return modelMapper.map(savedBooking, BookingResponse.class);
     }
-    public BookingResponse viewBookingDetailsById(long id){
+
+    public BookingResponse viewBookingDetailsById(long id) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
         return modelMapper.map(booking, BookingResponse.class);
@@ -74,6 +73,7 @@ public class BookingService {
         if (accountBalance >= fare) {
             double newBalance = accountBalance - fare;
             User user1 = User.builder()
+                    .id(userId)
                     .accountBalance(newBalance)
                     .build();
             userRepository.save(user1);
@@ -82,19 +82,5 @@ public class BookingService {
             System.out.println("Insufficient balance");
         }
     }
-public BookingResponse tripCompleted(Long userId, long taxiId, Long distance, BookingRequest bookingRequest) {
 
-    Double minimumCharge = 10.00;
-    Double fare = distance * minimumCharge;
-
-    Booking booking = Booking.builder()
-            .pickupLocation(bookingRequest.getPickupLocation())
-            .dropOffLocation(bookingRequest.getDropOffLocation())
-            .fare(fare)
-            .bookingTime(LocalDateTime.now())
-            .status(Status.CONFIRMED)
-            .build();
-    booking = bookingRepository.save(booking);
-    return modelMapper.map(booking, BookingResponse.class);
-}
 }
