@@ -5,17 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import taxibooking.billingapplication.constant.Status;
-import taxibooking.billingapplication.contract.request.BookingRequest;
 import taxibooking.billingapplication.contract.response.BookingResponse;
 import taxibooking.billingapplication.model.Booking;
-import taxibooking.billingapplication.model.Taxi;
-import taxibooking.billingapplication.model.User;
 import taxibooking.billingapplication.repository.BookingRepository;
 import taxibooking.billingapplication.repository.TaxiRepository;
 import taxibooking.billingapplication.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

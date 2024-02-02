@@ -34,17 +34,13 @@ public class BookingController {
     public @ResponseBody List<BookingResponse> viewAllBookingDetails(){
         return bookingService.viewAllBookingDetails();
     }
-    @DeleteMapping("/{id}")
-    public void cancelBooking(@PathVariable long id){
-        bookingService.cancelBooking(id);
-    }
     @PostMapping("/{userId}/fare")
     public void completeTrip(@PathVariable long userId, @RequestParam double distance){
         bookingService.completedTrip(userId,distance);
     }
     @PostMapping("/confirm/{id}")
-    public long confirmBooking(@PathVariable long id){
-        bookingService.confirmBooking(id);
+    public long cancelBooking(@PathVariable long id){
+        bookingService.cancelBooking(id);
         return id;
     }
 }

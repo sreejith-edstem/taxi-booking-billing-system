@@ -7,8 +7,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import taxibooking.billingapplication.contract.request.LoginRequest;
 import taxibooking.billingapplication.contract.request.SignUpRequest;
+import taxibooking.billingapplication.contract.request.UpdateAccountRequest;
 import taxibooking.billingapplication.contract.response.LoginResponse;
 import taxibooking.billingapplication.contract.response.SignUpResponse;
+import taxibooking.billingapplication.contract.response.UpdateAccountResponse;
 import taxibooking.billingapplication.model.User;
 import taxibooking.billingapplication.repository.UserRepository;
 import taxibooking.billingapplication.security.JwtService;
@@ -45,5 +47,17 @@ public class UserService {
         String jwtToken = jwtService.generateToken(user);
 
         return LoginResponse.builder().token(jwtToken).build();
+    }
+    public UpdateAccountResponse updateBalance(long id, UpdateAccountRequest request){
+        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
+        user = User.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .accountBalance(user.getAccountBalance() + request.getAccountBalance())
+                .build();
+        User updatedUser = userRepository.save(user);
+        return modelMapper.map(updatedUser, UpdateAccountResponse.class);
     }
 }

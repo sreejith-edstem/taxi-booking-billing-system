@@ -40,7 +40,7 @@ public class BookingService {
                 .fare(request.getFare())
                 .pickupLocation(request.getPickupLocation())
                 .dropOffLocation(request.getDropOffLocation())
-                .status(Status.PENDING)
+                .status(Status.CONFIRMED)
                 .build();
         Booking savedBooking = bookingRepository.save(booking);
         return modelMapper.map(savedBooking, BookingResponse.class);
@@ -57,13 +57,6 @@ public class BookingService {
         return bookings.stream()
                 .map(booking -> modelMapper.map(booking, BookingResponse.class))
                 .collect(Collectors.toList());
-    }
-
-    public void cancelBooking(long id) {
-        if (!bookingRepository.existsById(id)) {
-            throw new RuntimeException("Booking not found");
-        }
-        bookingRepository.deleteById(id);
     }
 
     public void completedTrip(long userId, double distance) {
@@ -83,7 +76,7 @@ public class BookingService {
             System.out.println("Insufficient balance");
         }
     }
-    public long confirmBooking(long bookingId){
+    public long cancelBooking(long bookingId){
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
         booking = Booking.builder()
@@ -92,7 +85,7 @@ public class BookingService {
                 .pickupLocation(booking.getPickupLocation())
                 .dropOffLocation(booking.getDropOffLocation())
                 .fare(booking.getFare())
-                .status(Status.CONFIRMED)
+                .status(Status.CANCELLED)
                 .taxiId(booking.getTaxiId())
                 .userId(booking.getUserId())
                 .build();
