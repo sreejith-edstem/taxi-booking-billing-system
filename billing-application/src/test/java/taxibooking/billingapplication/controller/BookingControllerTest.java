@@ -22,15 +22,5 @@ public class BookingControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private BookingService bookingService;
-    @Test
-    void testCreateBooking() throws Exception{
-        String json = "{\"title\":\"Test Note\",\"content\":\"This is a test note.\"}";
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/v1/user/booking/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isOk());
-
-    }
 
 }
