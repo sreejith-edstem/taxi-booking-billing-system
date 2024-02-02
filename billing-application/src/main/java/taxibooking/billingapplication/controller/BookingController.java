@@ -1,5 +1,6 @@
 package taxibooking.billingapplication.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 public class BookingController {
     private final BookingService bookingService;
     @PostMapping("/{userId}/{taxiId}/create")
-    public @ResponseBody BookingResponse createBooking(@PathVariable long userId, @PathVariable long taxiId, @RequestBody BookingRequest request){
+    public @ResponseBody BookingResponse createBooking(@PathVariable long userId, @PathVariable long taxiId,@Valid @RequestBody BookingRequest request){
         return this.bookingService.createBooking(userId,taxiId,request);
     }
     @GetMapping("/{id}")

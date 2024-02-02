@@ -46,5 +46,4 @@ public class UserService {
 
         return LoginResponse.builder().token(jwtToken).build();
     }
-
 }
