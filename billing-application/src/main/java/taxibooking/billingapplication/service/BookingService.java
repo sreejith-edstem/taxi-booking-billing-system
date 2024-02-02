@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import taxibooking.billingapplication.constant.Status;
 import taxibooking.billingapplication.contract.request.BookingRequest;
+import taxibooking.billingapplication.contract.request.UserRequest;
 import taxibooking.billingapplication.contract.response.BookingResponse;
 import taxibooking.billingapplication.model.Booking;
 import taxibooking.billingapplication.model.Taxi;
@@ -66,7 +67,7 @@ public class BookingService {
         bookingRepository.deleteById(id);
     }
 
-    public void completedTrip(long userId, double distance) {
+    public void completedTrip(long userId, double distance, UserRequest request) {
         Optional<User> user = userRepository.findById(userId);
         double accountBalance = user.get().getAccountBalance();
         double fare = distance * RATE_PER_KM;
@@ -74,6 +75,7 @@ public class BookingService {
             double newBalance = accountBalance - fare;
             User user1 = User.builder()
                     .id(userId)
+                    .accountBalance(request.getAccountBalance())
                     .accountBalance(newBalance)
                     .build();
             userRepository.save(user1);

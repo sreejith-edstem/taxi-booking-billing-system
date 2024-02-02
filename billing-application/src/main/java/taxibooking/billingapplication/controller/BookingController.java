@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import taxibooking.billingapplication.contract.request.BookingRequest;
+import taxibooking.billingapplication.contract.request.UserRequest;
 import taxibooking.billingapplication.contract.response.BookingResponse;
 import taxibooking.billingapplication.service.BookingService;
 
@@ -38,8 +39,8 @@ public class BookingController {
         bookingService.cancelBooking(id);
     }
     @PostMapping("/{userId}/fare")
-    public void completeTrip(@PathVariable long userId, @RequestParam double distance){
-        bookingService.completedTrip(userId, distance);
+    public void completeTrip(@PathVariable long userId, @RequestParam double distance, @RequestBody UserRequest request){
+        bookingService.completedTrip(userId,distance,request);
     }
     @PostMapping("/confirm/{id}")
     public long confirmBooking(@PathVariable long id){
