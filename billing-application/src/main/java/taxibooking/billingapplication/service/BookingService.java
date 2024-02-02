@@ -67,7 +67,10 @@ public class BookingService {
         if (accountBalance >= fare) {
             double newBalance = accountBalance - fare;
             User user1 = User.builder()
-                    .id(userId)
+                    .id(user.get().getId())
+                    .name(user.get().getName())
+                    .email(user.get().getEmail())
+                    .password(user.get().getPassword())
                     .accountBalance(newBalance)
                     .build();
             userRepository.save(user1);
