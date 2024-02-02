@@ -67,7 +67,7 @@ public class BookingService {
         bookingRepository.deleteById(id);
     }
 
-    public void completedTrip(long userId, double distance, UserRequest request) {
+    public void completedTrip(long userId, double distance) {
         Optional<User> user = userRepository.findById(userId);
         double accountBalance = user.get().getAccountBalance();
         double fare = distance * RATE_PER_KM;
@@ -75,7 +75,6 @@ public class BookingService {
             double newBalance = accountBalance - fare;
             User user1 = User.builder()
                     .id(userId)
-                    .accountBalance(request.getAccountBalance())
                     .accountBalance(newBalance)
                     .build();
             userRepository.save(user1);

@@ -39,8 +39,8 @@ public class BookingController {
         bookingService.cancelBooking(id);
     }
     @PostMapping("/{userId}/fare")
-    public void completeTrip(@PathVariable long userId, @RequestParam double distance, @RequestBody UserRequest request){
-        bookingService.completedTrip(userId,distance,request);
+    public void completeTrip(@PathVariable long userId, @RequestParam double distance){
+        bookingService.completedTrip(userId,distance);
     }
     @PostMapping("/confirm/{id}")
     public long confirmBooking(@PathVariable long id){
