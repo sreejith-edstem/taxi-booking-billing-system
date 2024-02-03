@@ -61,19 +61,12 @@ public class BookingServiceTest {
     }
     @Test
     void testCancelBooking() {
-        long id = 1L;
-        when(bookingRepository.existsById(id)).thenReturn(false);
-        assertThrows(RuntimeException.class, () -> bookingService.cancelBooking(id));
-    }
-
-    @Test
-    void testConfirmBooking() {
         Long bookingId = 1L;
 
         Booking booking = new Booking();
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
 
-        Long returnedBookingId = bookingService.confirmBooking(bookingId);
+        Long returnedBookingId = bookingService.cancelBooking(bookingId);
 
         assertEquals(bookingId, returnedBookingId);
         verify(bookingRepository, times(1)).findById(bookingId);

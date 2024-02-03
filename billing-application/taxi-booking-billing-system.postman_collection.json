@@ -100,21 +100,6 @@
 			"response": []
 		},
 		{
-			"name": "cancel-booking",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": {
-						"token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInN1YiI6InNhZGVyZWVAZ21haWwuY29tIiwiaWF0IjoxNzA2Nzg0MjU1LCJleHAiOjE3MDY4NzA2NTV9.W8tY3LiBIhgv61SICYYdDyBquZM5oZQIMGc3N69KK7U"
-					}
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": "http://localhost:8080/v1/user/booking/1"
-			},
-			"response": []
-		},
-		{
 			"name": "fare-calculation",
 			"request": {
 				"auth": {
@@ -165,7 +150,7 @@
 			"response": []
 		},
 		{
-			"name": "confirm-booking",
+			"name": "cancel-booking",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -176,6 +161,30 @@
 				"method": "POST",
 				"header": [],
 				"url": "http://localhost:8080/v1/user/booking/confirm/1"
+			},
+			"response": []
+		},
+		{
+			"name": "update-account-balance",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInN1YiI6InNkZjM0QGdtYWlsLmNvbSIsImlhdCI6MTcwNjg3NTMzNywiZXhwIjoxNzA2OTYxNzM3fQ.A-4RkaJ7IsZx6BbU4zOYKHDA4KetJXY6-rl1pVZDBAM"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"accountBalance\" : 1000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/v1/user/1/update"
 			},
 			"response": []
 		}

@@ -28,7 +28,7 @@ public class BookingService {
 
     private static final double RATE_PER_KM = 0.5;
 
-    public BookingResponse createBooking(long userId, long taxiId, BookingRequest request) {
+    public BookingResponse createBooking(long userId, BookingRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         List<Taxi> availableTaxis = searchNearestTaxi(request.getPickupLocation());
