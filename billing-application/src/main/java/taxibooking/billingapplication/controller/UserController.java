@@ -22,17 +22,20 @@ import taxibooking.billingapplication.service.UserService;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest request) {
         return ResponseEntity.ok(userService.signUp(request));
     }
+
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         return userService.authenticate(request);
     }
-    @PutMapping("/{userId}/update")
-    public UpdateAccountResponse updateBalance(@PathVariable long userId, @RequestBody UpdateAccountRequest request){
-        return userService.updateBalance(userId,request);
-    }
 
+    @PutMapping("/{userId}/update")
+    public UpdateAccountResponse updateBalance(
+            @PathVariable long userId, @RequestBody UpdateAccountRequest request) {
+        return userService.updateBalance(userId, request);
+    }
 }

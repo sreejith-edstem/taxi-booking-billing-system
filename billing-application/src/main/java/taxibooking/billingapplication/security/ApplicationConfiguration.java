@@ -25,7 +25,7 @@ public class ApplicationConfiguration {
                 (UserDetails)
                         userRepository
                                 .findByEmail(username)
-                                .orElseThrow(() -> new RuntimeException("User"));
+                                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @Bean

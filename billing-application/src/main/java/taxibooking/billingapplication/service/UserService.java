@@ -36,9 +36,13 @@ public class UserService {
         user = userRepository.save(user);
         return modelMapper.map(user, SignUpResponse.class);
     }
+
     public LoginResponse authenticate(LoginRequest request) {
-        User user = (User) userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user =
+                (User)
+                        userRepository
+                                .findByEmail(request.getEmail())
+                                .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");
@@ -48,15 +52,20 @@ public class UserService {
 
         return LoginResponse.builder().token(jwtToken).build();
     }
-    public UpdateAccountResponse updateBalance(long id, UpdateAccountRequest request){
-        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
-        user = User.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .accountBalance(user.getAccountBalance() + request.getAccountBalance())
-                .build();
+
+    public UpdateAccountResponse updateBalance(long id, UpdateAccountRequest request) {
+        User user =
+                userRepository
+                        .findById(id)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+        user =
+                User.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .password(user.getPassword())
+                        .accountBalance(user.getAccountBalance() + request.getAccountBalance())
+                        .build();
         User updatedUser = userRepository.save(user);
         return modelMapper.map(updatedUser, UpdateAccountResponse.class);
     }

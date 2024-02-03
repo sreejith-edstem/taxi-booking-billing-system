@@ -1,5 +1,6 @@
 package taxibooking.billingapplication.contract.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +12,8 @@ import taxibooking.billingapplication.constant.Status;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingRequest {
-    private String pickupLocation;
-    private String dropOffLocation;
+    @NotBlank private String pickupLocation;
+    @NotBlank private String dropOffLocation;
     private double fare;
     private Status status;
 }

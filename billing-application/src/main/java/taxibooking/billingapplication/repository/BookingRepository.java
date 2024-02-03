@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 import taxibooking.billingapplication.model.Booking;
 
 @Repository
-public interface BookingRepository extends JpaRepository<Booking,Long> {
-}
+public interface BookingRepository extends JpaRepository<Booking, Long> {}

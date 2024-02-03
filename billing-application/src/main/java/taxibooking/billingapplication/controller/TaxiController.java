@@ -13,8 +13,9 @@ import taxibooking.billingapplication.service.TaxiService;
 @RequiredArgsConstructor
 public class TaxiController {
     private final TaxiService taxiService;
+
     @PostMapping("/taxi/create")
-    public Long createTaxi(@RequestBody TaxiRequest request){
-        return taxiService.createTaxi(request);
+    public Long addTaxi(@RequestBody TaxiRequest request) {
+        return taxiService.addTaxi(request);
     }
 }

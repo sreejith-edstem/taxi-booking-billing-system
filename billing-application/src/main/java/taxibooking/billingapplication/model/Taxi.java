@@ -18,7 +18,8 @@ public class Taxi {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String driverName;
-    private long licenseNumber;
+    private String licenseNumber;
     private String currentLocation;
 }

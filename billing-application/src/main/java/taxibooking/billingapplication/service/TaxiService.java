@@ -13,7 +13,7 @@ public class TaxiService {
     private final TaxiRepository taxiRepository;
     private final ModelMapper modelMapper;
 
-    public Long createTaxi(TaxiRequest request){
+    public Long addTaxi(TaxiRequest request) {
         Taxi taxi = taxiRepository.save(modelMapper.map(request, Taxi.class));
         return taxi.getId();
     }

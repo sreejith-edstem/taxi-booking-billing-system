@@ -1,5 +1,9 @@
 package taxibooking.billingapplication.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,11 +17,6 @@ import taxibooking.billingapplication.repository.BookingRepository;
 import taxibooking.billingapplication.repository.TaxiRepository;
 import taxibooking.billingapplication.repository.UserRepository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class BookingService {
@@ -29,30 +28,35 @@ public class BookingService {
     private static final double RATE_PER_KM = 0.5;
 
     public BookingResponse createBooking(long userId, BookingRequest request) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
         List<Taxi> availableTaxis = searchNearestTaxi(request.getPickupLocation());
         if (availableTaxis.isEmpty()) {
             throw new RuntimeException("No taxis available at the pickup location");
         }
         Taxi nearestTaxi = availableTaxis.get(0);
 
-        Booking booking = Booking.builder()
-                .userId(user)
-                .taxiId(nearestTaxi)
-                .bookingTime(LocalDateTime.now())
-                .fare(request.getFare())
-                .pickupLocation(request.getPickupLocation())
-                .dropOffLocation(request.getDropOffLocation())
-                .status(Status.CONFIRMED)
-                .build();
+        Booking booking =
+                Booking.builder()
+                        .userId(user)
+                        .taxiId(nearestTaxi)
+                        .bookingTime(LocalDateTime.now())
+                        .fare(request.getFare())
+                        .pickupLocation(request.getPickupLocation())
+                        .dropOffLocation(request.getDropOffLocation())
+                        .status(Status.CONFIRMED)
+                        .build();
         Booking savedBooking = bookingRepository.save(booking);
         return modelMapper.map(savedBooking, BookingResponse.class);
     }
+
     public List<Taxi> searchNearestTaxi(String pickupLocation) {
-        List<Taxi> availableTaxis = taxiRepository.findAll().stream()
-                .filter(taxi -> taxi.getCurrentLocation().equals(pickupLocation))
-                .collect(Collectors.toList());
+        List<Taxi> availableTaxis =
+                taxiRepository.findAll().stream()
+                        .filter(taxi -> taxi.getCurrentLocation().equals(pickupLocation))
+                        .collect(Collectors.toList());
         if (availableTaxis.isEmpty()) {
             throw new RuntimeException("No taxis available at the pickup location");
         }
@@ -60,9 +64,12 @@ public class BookingService {
                 .map(taxi -> modelMapper.map(taxi, Taxi.class))
                 .collect(Collectors.toList());
     }
+
     public BookingResponse viewBookingDetailsById(long id) {
-        Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        Booking booking =
+                bookingRepository
+                        .findById(id)
+                        .orElseThrow(() -> new RuntimeException("Booking not found"));
         return modelMapper.map(booking, BookingResponse.class);
     }
 
@@ -73,39 +80,44 @@ public class BookingService {
                 .collect(Collectors.toList());
     }
 
-    public void completedTrip(long userId, double distance) {
+    public void fareCalculation(long userId, double distance) {
         Optional<User> user = userRepository.findById(userId);
         double accountBalance = user.get().getAccountBalance();
         double fare = distance * RATE_PER_KM;
 
         if (accountBalance >= fare) {
             double newBalance = accountBalance - fare;
-            User user1 = User.builder()
-                    .id(user.get().getId())
-                    .name(user.get().getName())
-                    .email(user.get().getEmail())
-                    .password(user.get().getPassword())
-                    .accountBalance(newBalance)
-                    .build();
+            User user1 =
+                    User.builder()
+                            .id(user.get().getId())
+                            .name(user.get().getName())
+                            .email(user.get().getEmail())
+                            .password(user.get().getPassword())
+                            .accountBalance(newBalance)
+                            .build();
             userRepository.save(user1);
             System.out.println("Ride completed");
         } else {
             System.out.println("Insufficient balance");
         }
     }
-    public long cancelBooking(long bookingId){
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
-        booking = Booking.builder()
-                .id(booking.getId())
-                .bookingTime(booking.getBookingTime())
-                .pickupLocation(booking.getPickupLocation())
-                .dropOffLocation(booking.getDropOffLocation())
-                .fare(booking.getFare())
-                .status(Status.CANCELLED)
-                .taxiId(booking.getTaxiId())
-                .userId(booking.getUserId())
-                .build();
+
+    public long cancelBooking(long bookingId) {
+        Booking booking =
+                bookingRepository
+                        .findById(bookingId)
+                        .orElseThrow(() -> new RuntimeException("Booking not found"));
+        booking =
+                Booking.builder()
+                        .id(booking.getId())
+                        .bookingTime(booking.getBookingTime())
+                        .pickupLocation(booking.getPickupLocation())
+                        .dropOffLocation(booking.getDropOffLocation())
+                        .fare(booking.getFare())
+                        .status(Status.CANCELLED)
+                        .taxiId(booking.getTaxiId())
+                        .userId(booking.getUserId())
+                        .build();
         bookingRepository.save(booking);
         return bookingId;
     }
