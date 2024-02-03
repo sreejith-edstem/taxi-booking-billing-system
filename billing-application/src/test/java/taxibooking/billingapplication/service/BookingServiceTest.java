@@ -6,6 +6,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,14 +50,14 @@ public class BookingServiceTest {
         verify(bookingRepository, times(1)).findById(id);
     }
 
-    //    @Test
-    //    void testViewAllBookingDetails(){
-    //        List<Booking> expectedBookings = Arrays.asList(new Booking(), new Booking());
-    //        when(bookingRepository.findAll()).thenReturn(expectedBookings);
-    //        List<BookingResponse> actualBookings = bookingService.viewAllBookingDetails();
-    //        assertEquals(expectedBookings, actualBookings);
-    //        verify(bookingRepository, times(1)).findAll();
-    //    }
+        @Test
+        void testViewAllBookingDetails(){
+            List<Booking> expectedBookings = Arrays.asList(new Booking(), new Booking());
+            when(bookingRepository.findAll()).thenReturn(expectedBookings);
+            List<BookingResponse> actualBookings = bookingService.viewAllBookingDetails();
+            assertEquals(expectedBookings, actualBookings);
+            verify(bookingRepository, times(1)).findAll();
+        }
     @Test
     void testCancelBooking() {
         Long bookingId = 1L;
