@@ -39,7 +39,7 @@ public class ApplicationConfiguration {
                                 .matches(
                                         authentication.getCredentials().toString(),
                                         userDetails.getPassword())) {
-                            throw new RuntimeException("User");
+                            throw new RuntimeException("User not found");
                         }
                     }
                 };

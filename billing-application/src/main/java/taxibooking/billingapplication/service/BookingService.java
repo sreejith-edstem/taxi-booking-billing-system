@@ -31,11 +31,15 @@ public class BookingService {
     public BookingResponse createBooking(long userId, long taxiId, BookingRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        Taxi taxi = taxiRepository.findById(taxiId)
-                .orElseThrow(() -> new RuntimeException("Taxi not found"));
+        List<Taxi> availableTaxis = searchNearestTaxi(request.getPickupLocation());
+        if (availableTaxis.isEmpty()) {
+            throw new RuntimeException("No taxis available at the pickup location");
+        }
+        Taxi nearestTaxi = availableTaxis.get(0);
+
         Booking booking = Booking.builder()
                 .userId(user)
-                .taxiId(taxi)
+                .taxiId(nearestTaxi)
                 .bookingTime(LocalDateTime.now())
                 .fare(request.getFare())
                 .pickupLocation(request.getPickupLocation())
@@ -45,7 +49,17 @@ public class BookingService {
         Booking savedBooking = bookingRepository.save(booking);
         return modelMapper.map(savedBooking, BookingResponse.class);
     }
-
+    public List<Taxi> searchNearestTaxi(String pickupLocation) {
+        List<Taxi> availableTaxis = taxiRepository.findAll().stream()
+                .filter(taxi -> taxi.getCurrentLocation().equals(pickupLocation))
+                .collect(Collectors.toList());
+        if (availableTaxis.isEmpty()) {
+            throw new RuntimeException("No taxis available at the pickup location");
+        }
+        return availableTaxis.stream()
+                .map(taxi -> modelMapper.map(taxi, Taxi.class))
+                .collect(Collectors.toList());
+    }
     public BookingResponse viewBookingDetailsById(long id) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
