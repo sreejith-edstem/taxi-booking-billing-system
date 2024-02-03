@@ -11,6 +11,8 @@ import taxibooking.billingapplication.contract.request.UpdateAccountRequest;
 import taxibooking.billingapplication.contract.response.LoginResponse;
 import taxibooking.billingapplication.contract.response.SignUpResponse;
 import taxibooking.billingapplication.contract.response.UpdateAccountResponse;
+import taxibooking.billingapplication.exception.InvalidLoginException;
+import taxibooking.billingapplication.exception.UserNotFoundException;
 import taxibooking.billingapplication.model.User;
 import taxibooking.billingapplication.repository.UserRepository;
 import taxibooking.billingapplication.security.JwtService;
@@ -42,7 +44,7 @@ public class UserService {
                 (User)
                         userRepository
                                 .findByEmail(request.getEmail())
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new InvalidLoginException("Invalid !!!.."));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");
@@ -57,7 +59,7 @@ public class UserService {
         User user =
                 userRepository
                         .findById(id)
-                        .orElseThrow(() -> new RuntimeException("User not found"));
+                        .orElseThrow(() -> new UserNotFoundException("User not found"));
         user =
                 User.builder()
                         .id(user.getId())

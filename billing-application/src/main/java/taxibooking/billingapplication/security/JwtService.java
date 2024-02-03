@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import taxibooking.billingapplication.exception.UserNotFoundException;
 import taxibooking.billingapplication.model.User;
 
 @Service
@@ -47,7 +48,7 @@ public class JwtService {
         final String username = extractUserName(token);
 
         if (!username.equals(userDetails.getUsername())) {
-            throw new RuntimeException("User");
+            throw new UserNotFoundException("User not found");
         }
         if (isTokenExpired(token)) {
             throw new RuntimeException("Token");

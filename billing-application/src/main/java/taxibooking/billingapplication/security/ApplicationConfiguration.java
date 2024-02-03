@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import taxibooking.billingapplication.exception.UserNotFoundException;
 import taxibooking.billingapplication.repository.UserRepository;
 
 @Configuration
@@ -25,7 +26,7 @@ public class ApplicationConfiguration {
                 (UserDetails)
                         userRepository
                                 .findByEmail(username)
-                                .orElseThrow(() -> new RuntimeException("User not found"));
+                                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @Bean
@@ -39,7 +40,7 @@ public class ApplicationConfiguration {
                                 .matches(
                                         authentication.getCredentials().toString(),
                                         userDetails.getPassword())) {
-                            throw new RuntimeException("User not found");
+                            throw new UserNotFoundException("User not found");
                         }
                     }
                 };

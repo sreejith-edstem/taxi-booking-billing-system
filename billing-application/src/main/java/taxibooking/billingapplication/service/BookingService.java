@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import taxibooking.billingapplication.constant.Status;
 import taxibooking.billingapplication.contract.request.BookingRequest;
 import taxibooking.billingapplication.contract.response.BookingResponse;
+import taxibooking.billingapplication.exception.BookingNotFoundException;
+import taxibooking.billingapplication.exception.UserNotFoundException;
 import taxibooking.billingapplication.model.Booking;
 import taxibooking.billingapplication.model.Taxi;
 import taxibooking.billingapplication.model.User;
@@ -31,7 +33,7 @@ public class BookingService {
         User user =
                 userRepository
                         .findById(userId)
-                        .orElseThrow(() -> new RuntimeException("User not found"));
+                        .orElseThrow(() -> new UserNotFoundException("User not found"));
         List<Taxi> availableTaxis = searchNearestTaxi(request.getPickupLocation());
         if (availableTaxis.isEmpty()) {
             throw new RuntimeException("No taxis available at the pickup location");
@@ -69,7 +71,7 @@ public class BookingService {
         Booking booking =
                 bookingRepository
                         .findById(id)
-                        .orElseThrow(() -> new RuntimeException("Booking not found"));
+                        .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
         return modelMapper.map(booking, BookingResponse.class);
     }
 
@@ -106,7 +108,7 @@ public class BookingService {
         Booking booking =
                 bookingRepository
                         .findById(bookingId)
-                        .orElseThrow(() -> new RuntimeException("Booking not found"));
+                        .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
         booking =
                 Booking.builder()
                         .id(booking.getId())

@@ -35,7 +35,7 @@ public class UserServiceTest {
     @Test
     void testSignUp() {
 
-        SignUpRequest signupRequest = new SignUpRequest("vignesh", "vig@Gmail.com", "vig@123");
+        SignUpRequest signupRequest = new SignUpRequest("Sreejith", "sree@Gmail.com", "Sree@258");
         User user =
                 User.builder()
                         .name(signupRequest.getName())
