@@ -2,10 +2,12 @@ package taxibooking.billingapplication.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import taxibooking.billingapplication.constant.Status;
+import taxibooking.billingapplication.contract.request.BookingRequest;
 import taxibooking.billingapplication.contract.response.BookingResponse;
 import taxibooking.billingapplication.model.Booking;
+import taxibooking.billingapplication.model.Taxi;
+import taxibooking.billingapplication.model.User;
 import taxibooking.billingapplication.repository.BookingRepository;
 import taxibooking.billingapplication.repository.TaxiRepository;
 import taxibooking.billingapplication.repository.UserRepository;
@@ -52,11 +58,24 @@ public class BookingServiceTest {
 
         @Test
         void testViewAllBookingDetails(){
-            List<Booking> expectedBookings = Arrays.asList(new Booking(), new Booking());
-            when(bookingRepository.findAll()).thenReturn(expectedBookings);
-            List<BookingResponse> actualBookings = bookingService.viewAllBookingDetails();
-            assertEquals(expectedBookings, actualBookings);
+            Booking booking1 = new Booking();
+            Booking booking2 = new Booking();
+            List<Booking> bookings = Arrays.asList(booking1, booking2);
+
+            BookingResponse bookingResponse1 = new BookingResponse();
+            BookingResponse bookingResponse2 = new BookingResponse();
+            List<BookingResponse> expectedResponses = Arrays.asList(bookingResponse1, bookingResponse2);
+
+            when(bookingRepository.findAll()).thenReturn(bookings);
+            when(modelMapper.map(booking1, BookingResponse.class)).thenReturn(bookingResponse1);
+            when(modelMapper.map(booking2, BookingResponse.class)).thenReturn(bookingResponse2);
+
+            List<BookingResponse> actualResponses = bookingService.viewAllBookingDetails();
+
+            assertEquals(expectedResponses, actualResponses);
             verify(bookingRepository, times(1)).findAll();
+            verify(modelMapper, times(1)).map(booking1, BookingResponse.class);
+            verify(modelMapper, times(1)).map(booking2, BookingResponse.class);
         }
     @Test
     void testCancelBooking() {
@@ -71,4 +90,89 @@ public class BookingServiceTest {
         verify(bookingRepository, times(1)).findById(bookingId);
         verify(bookingRepository, times(1)).save(any(Booking.class));
     }
+    @Test
+    public void testSearchNearestTaxi() {
+        String pickupLocation = "Test Location";
+        Taxi taxi1 = Taxi.builder().currentLocation(pickupLocation).build();
+        Taxi taxi2 = Taxi.builder().currentLocation(pickupLocation).build();
+        List<Taxi> taxis = Arrays.asList(taxi1, taxi2);
+
+        when(taxiRepository.findAll()).thenReturn(taxis);
+        when(modelMapper.map(any(Taxi.class), eq(Taxi.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        List<Taxi> actualTaxis = bookingService.searchNearestTaxi(pickupLocation);
+
+        assertEquals(taxis, actualTaxis);
+        verify(taxiRepository, times(1)).findAll();
+        verify(modelMapper, times(2)).map(any(Taxi.class), eq(Taxi.class));
+    }
+    @Test
+    void testCreateBooking(){
+        long userId = 1L;
+        BookingRequest request = BookingRequest.builder()
+                .pickupLocation("Test Location")
+                .fare(100.0)
+                .dropOffLocation("Test DropOff Location")
+                .build();
+
+
+        User user = User.builder().id(userId).build();
+        Taxi taxi = Taxi.builder().currentLocation(request.getPickupLocation()).build();
+        List<Taxi> taxis = Arrays.asList(taxi);
+
+        Booking booking = Booking.builder()
+                .userId(user)
+                .taxiId(taxi)
+                .bookingTime(LocalDateTime.now())
+                .fare(request.getFare())
+                .pickupLocation(request.getPickupLocation())
+                .dropOffLocation(request.getDropOffLocation())
+                .status(Status.CONFIRMED)
+                .build();
+
+        Booking savedBooking = Booking.builder().build();
+        BookingResponse expectedResponse = BookingResponse.builder().build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(taxiRepository.findAll()).thenReturn(taxis);
+        when(bookingRepository.save(any(Booking.class))).thenReturn(savedBooking);
+        when(modelMapper.map(savedBooking, BookingResponse.class)).thenReturn(expectedResponse);
+
+        BookingResponse actualResponse = bookingService.createBooking(userId, request);
+
+        assertEquals(expectedResponse, actualResponse);
+        verify(userRepository, times(1)).findById(userId);
+        verify(taxiRepository, times(1)).findAll();
+        verify(bookingRepository, times(1)).save(any(Booking.class));
+        verify(modelMapper, times(1)).map(savedBooking, BookingResponse.class);
+    }
+    @Test
+    void testFareCalculation(){
+        long userId = 1L;
+        double distance = 10.0;
+        double RATE_PER_KM = 5.0;
+        double accountBalance = 100.0;
+        double fare = distance * RATE_PER_KM;
+        double newBalance = accountBalance - fare;
+
+        User user = User.builder()
+                .id(userId)
+                .accountBalance(accountBalance)
+                .build();
+
+        User updatedUser = User.builder()
+                .id(userId)
+                .accountBalance(newBalance)
+                .build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(updatedUser);
+
+        bookingService.fareCalculation(userId, distance);
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+
 }

@@ -10,6 +10,8 @@ import taxibooking.billingapplication.model.Taxi;
 import taxibooking.billingapplication.repository.TaxiRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class TaxiServiceTest {
@@ -26,11 +28,18 @@ public class TaxiServiceTest {
     }
         @Test
         void testAddTaxi(){
-            Taxi taxi = new Taxi();
             TaxiRequest request = new TaxiRequest();
+            Taxi taxi = Taxi.builder()
+                    .id(1L)
+                    .build();
+
             when(modelMapper.map(request, Taxi.class)).thenReturn(taxi);
             when(taxiRepository.save(taxi)).thenReturn(taxi);
-            Long result = taxiService.addTaxi(request);
-            assertEquals(taxi,result);
+
+            Long taxiId = taxiService.addTaxi(request);
+
+            assertEquals(taxi.getId(), taxiId);
+            verify(modelMapper, times(1)).map(request, Taxi.class);
+            verify(taxiRepository, times(1)).save(taxi);
         }
 }

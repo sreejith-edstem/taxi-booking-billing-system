@@ -5,15 +5,24 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import taxibooking.billingapplication.contract.request.LoginRequest;
 import taxibooking.billingapplication.contract.request.SignUpRequest;
+import taxibooking.billingapplication.contract.response.LoginResponse;
 import taxibooking.billingapplication.contract.response.SignUpResponse;
+import taxibooking.billingapplication.exception.InvalidLoginException;
 import taxibooking.billingapplication.model.User;
 import taxibooking.billingapplication.repository.UserRepository;
 import taxibooking.billingapplication.security.JwtService;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
@@ -53,5 +62,68 @@ public class UserServiceTest {
         SignUpResponse actualResponse = userService.signUp(signupRequest);
 
         assertEquals(expectedResponse, actualResponse);
+    }
+    @Test
+    void testAuthenticate(){
+        String email = "test@example.com";
+        String password = "password";
+        String encodedPassword = "encodedPassword";
+        String jwtToken = "jwtToken";
+
+        LoginRequest request = LoginRequest.builder()
+                .email(email)
+                .password(password)
+                .build();
+        User user = User.builder()
+                .password(encodedPassword)
+                .build();
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(password, encodedPassword)).thenReturn(true);
+        when(jwtService.generateToken(user)).thenReturn(jwtToken);
+
+        LoginResponse response = userService.authenticate(request);
+
+        assertEquals(jwtToken, response.getToken());
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(passwordEncoder, times(1)).matches(password, encodedPassword);
+        verify(jwtService, times(1)).generateToken(user);
+    }
+    @Test
+    public void testAuthenticate_InvalidLogin() {
+        String email = "test@example.com";
+        String password = "password";
+
+        LoginRequest request = LoginRequest.builder()
+                .email(email)
+                .password(password)
+                .build();
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertThrows(InvalidLoginException.class, () -> userService.authenticate(request));
+        verify(userRepository, times(1)).findByEmail(email);
+    }
+    @Test
+    public void testAuthenticate_BadCredentials() {
+        String email = "test@example.com";
+        String password = "password";
+        String encodedPassword = "encodedPassword";
+
+        LoginRequest request = LoginRequest.builder()
+                .email(email)
+                .password(password)
+                .build();
+
+        User user = User.builder()
+                .password(encodedPassword)
+                .build();
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(password, encodedPassword)).thenReturn(false);
+
+        assertThrows(BadCredentialsException.class, () -> userService.authenticate(request));
+        verify(userRepository, times(1)).findByEmail(email);
+        verify(passwordEncoder, times(1)).matches(password, encodedPassword);
     }
 }

@@ -55,6 +55,7 @@ public class UserService {
         return LoginResponse.builder().token(jwtToken).build();
     }
 
+
     public UpdateAccountResponse updateBalance(long id, UpdateAccountRequest request) {
         User user =
                 userRepository

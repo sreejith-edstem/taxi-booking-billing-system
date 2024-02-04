@@ -1,10 +1,5 @@
 package taxibooking.billingapplication.controller;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +8,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import taxibooking.billingapplication.contract.request.BookingRequest;
 import taxibooking.billingapplication.contract.response.BookingResponse;
 import taxibooking.billingapplication.service.BookingService;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,26 +42,31 @@ public class BookingControllerTest {
     void testCreateBooking() throws Exception{
         long userId = 1L;
         BookingRequest request = new BookingRequest();
-        BookingResponse response = new BookingResponse();
+        BookingResponse expectedResponse = new BookingResponse();
 
-        when(bookingService.createBooking(userId, request)).thenReturn(response);
+        when(bookingService.createBooking(userId, request)).thenReturn(expectedResponse);
 
-        mockMvc.perform(post("/v1/user/booking/{userId}/create", userId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/user/booking/{userId}/create", userId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(request)))
-                .andExpect(status().isOk());
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedResponse)));
+
+        verify(bookingService, times(1)).createBooking(userId, request);
     }
     @Test
     public void testViewAllBookingDetails() throws Exception {
         BookingResponse response1 = new BookingResponse();
-        BookingResponse response2 = new BookingResponse();
-        List<BookingResponse> responses = Arrays.asList(response1, response2);
+        List<BookingResponse> expectedResponses = Arrays.asList(new BookingResponse(), new BookingResponse());
 
-        when(bookingService.viewAllBookingDetails()).thenReturn(responses);
+        when(bookingService.viewAllBookingDetails()).thenReturn(expectedResponses);
 
-        mockMvc.perform(get("/v1/user/booking")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/user/booking")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedResponses)));
+
+        verify(bookingService, times(1)).viewAllBookingDetails();
     }
     @Test
     public void testFareCalculation() throws Exception {
@@ -69,10 +75,12 @@ public class BookingControllerTest {
 
         doNothing().when(bookingService).fareCalculation(userId, distance);
 
-        mockMvc.perform(post("/v1/user/booking/{userId}/fare", userId)
+        mockMvc.perform(MockMvcRequestBuilders.post("/v1/user/booking/{userId}/fare", userId)
                         .param("distance", String.valueOf(distance))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(bookingService, times(1)).fareCalculation(userId, distance);
     }
     @Test
     public void testCancelBooking() throws Exception {
