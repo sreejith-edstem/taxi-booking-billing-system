@@ -17,7 +17,5 @@ public class BookingResponse {
     private String pickUpLocation;
     private String dropOffLocation;
     private double fare;
-
-    @Enumerated(EnumType.STRING)
     private Status status;
 }

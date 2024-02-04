@@ -28,18 +28,19 @@ public class TaxiServiceTest {
     }
         @Test
         void testAddTaxi(){
-            TaxiRequest request = new TaxiRequest();
+            TaxiRequest taxiRequest = new TaxiRequest("Dathan","KL-20R-5117","Aluva");
+
             Taxi taxi = Taxi.builder()
                     .id(1L)
                     .build();
 
-            when(modelMapper.map(request, Taxi.class)).thenReturn(taxi);
+            when(modelMapper.map(taxiRequest, Taxi.class)).thenReturn(taxi);
             when(taxiRepository.save(taxi)).thenReturn(taxi);
 
-            Long taxiId = taxiService.addTaxi(request);
+            Long taxiId = taxiService.addTaxi(taxiRequest);
 
             assertEquals(taxi.getId(), taxiId);
-            verify(modelMapper, times(1)).map(request, Taxi.class);
+            verify(modelMapper, times(1)).map(taxiRequest, Taxi.class);
             verify(taxiRepository, times(1)).save(taxi);
         }
 }
