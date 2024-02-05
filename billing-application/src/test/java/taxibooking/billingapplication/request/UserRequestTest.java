@@ -1,44 +1,44 @@
-package taxibooking.billingapplication.model;
+package taxibooking.billingapplication.request;
 
 import org.junit.jupiter.api.Test;
+import taxibooking.billingapplication.contract.request.UserRequest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class UserTest {
+public class UserRequestTest {
     @Test
     void getPassword(){
-        User user = User.builder()
+        UserRequest request = UserRequest.builder()
                 .password("Abv@123")
                 .build();
-        assertEquals(user.getPassword(),"Abv@123");
+        assertEquals(request.getPassword(),"Abv@123");
     }
     @Test
     void getEmail(){
-        User user = User.builder()
+        UserRequest request = UserRequest.builder()
                 .email("sree54@gmail.com")
                 .build();
-        assertEquals(user.getEmail(),"sree54@gmail.com");
+        assertEquals(request.getEmail(),"sree54@gmail.com");
     }
     @Test
     void getName(){
-        User user = User.builder()
+        UserRequest request = UserRequest.builder()
                 .name("Sreejith")
                 .build();
-        assertEquals(user.getName(),"Sreejith");
+        assertEquals(request.getName(),"Sreejith");
     }
     @Test
     void getAccountBalance(){
-        User user = User.builder()
+        UserRequest request = UserRequest.builder()
                 .accountBalance(5689)
                 .build();
-        assertEquals(user.getAccountBalance(),5689);
+        assertEquals(request.getAccountBalance(),5689);
     }
     @Test
     public void checkConstructor() {
-        User testUser = new User(1L,"joe","joe@gmail.com","Joe@123",4561);
-        User checkUser = User.builder()
-                .id(1L)
+        UserRequest testUser = new UserRequest("joe","joe@gmail.com","Joe@123",4561);
+        UserRequest checkUser = UserRequest.builder()
                 .name("joe")
                 .email("joe@gmail.com")
                 .password("Joe@123")
@@ -52,7 +52,7 @@ public class UserTest {
 
     @Test
     public void testDefaultConstructor() {
-        User testUser = new User();
+        UserRequest testUser = new UserRequest();
 
         assertNotNull(testUser);
     }

@@ -3,6 +3,7 @@ package taxibooking.billingapplication.model;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class BookingTest {
     @Test
@@ -25,5 +26,12 @@ public class BookingTest {
                 .fare(5214)
                 .build();
         assertEquals(booking.getFare(),5214);
+    }
+
+    @Test
+    public void testDefaultConstructor() {
+        Booking testBooking = new Booking();
+
+        assertNotNull(testBooking);
     }
 }
