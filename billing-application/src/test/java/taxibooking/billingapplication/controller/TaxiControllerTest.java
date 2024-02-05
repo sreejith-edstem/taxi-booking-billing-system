@@ -11,8 +11,11 @@ import taxibooking.billingapplication.contract.request.TaxiRequest;
 import taxibooking.billingapplication.service.TaxiService;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -24,13 +27,17 @@ public class TaxiControllerTest {
 
     @Test
     public void testAddTaxi() throws Exception {
-        TaxiRequest taxiRequest = new TaxiRequest("Dathan","KL-20R-5117","Aluva");
+        TaxiRequest request = new TaxiRequest();
+        Long expectedResponse = 1L;
 
-        when(taxiService.addTaxi(any(TaxiRequest.class))).thenReturn(1L);
+        when(taxiService.addTaxi(any(TaxiRequest.class))).thenReturn(expectedResponse);
 
         mockMvc.perform(post("/v1/taxi/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(taxiRequest)))
-                .andExpect(status().isOk());
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedResponse.toString()));
+
+        verify(taxiService, times(1)).addTaxi(any(TaxiRequest.class));
     }
 }

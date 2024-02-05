@@ -9,8 +9,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import taxibooking.billingapplication.contract.request.LoginRequest;
 import taxibooking.billingapplication.contract.request.SignUpRequest;
+import taxibooking.billingapplication.contract.request.UpdateAccountRequest;
 import taxibooking.billingapplication.contract.response.LoginResponse;
 import taxibooking.billingapplication.contract.response.SignUpResponse;
+import taxibooking.billingapplication.contract.response.UpdateAccountResponse;
 import taxibooking.billingapplication.exception.InvalidLoginException;
 import taxibooking.billingapplication.model.User;
 import taxibooking.billingapplication.repository.UserRepository;
@@ -21,6 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -125,5 +128,20 @@ public class UserServiceTest {
         assertThrows(BadCredentialsException.class, () -> userService.authenticate(request));
         verify(userRepository, times(1)).findByEmail(email);
         verify(passwordEncoder, times(1)).matches(password, encodedPassword);
+    }
+    @Test
+    public void testUpdateBalance() {
+        long id = 1L;
+        User user = new User();
+        UpdateAccountRequest request = new UpdateAccountRequest();
+        UpdateAccountResponse expectedResponse = new UpdateAccountResponse();
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(modelMapper.map(any(User.class), eq(UpdateAccountResponse.class))).thenReturn(expectedResponse);
+
+        UpdateAccountResponse actualResponse = userService.updateBalance(id, request);
+
+        assertEquals(expectedResponse, actualResponse);
     }
 }
