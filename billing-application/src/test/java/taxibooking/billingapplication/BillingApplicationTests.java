@@ -8,4 +8,10 @@ class BillingApplicationTests {
 
     @Test
     void contextLoads() {}
+
+
+    @Test
+    public void main() {
+        BillingApplication.main(new String[] {});
+    }
 }

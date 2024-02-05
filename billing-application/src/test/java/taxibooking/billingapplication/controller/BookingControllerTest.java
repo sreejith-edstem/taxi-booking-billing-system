@@ -57,13 +57,6 @@ public class BookingControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(bookingResponse)));
     }
 
-
-
-
-
-
-
-    // verify(bookingService, times(1)).createBooking(userId, request);
     @Test
     public void testViewAllBookingDetails() throws Exception {
         List<BookingResponse> expectedResponses = Arrays.asList(new BookingResponse(), new BookingResponse());
