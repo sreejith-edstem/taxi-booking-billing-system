@@ -1,6 +1,7 @@
 package taxibooking.billingapplication.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -105,6 +107,16 @@ public class BookingServiceTest {
         assertEquals(taxis, actualTaxis);
         verify(taxiRepository, times(1)).findAll();
         verify(modelMapper, times(2)).map(any(Taxi.class), eq(Taxi.class));
+    }
+    @Test
+    public void testSearchNearestTaxi_NoTaxisAvailable() {
+        String pickupLocation = "Test Location";
+        List<Taxi> taxis = Collections.emptyList();
+
+        when(taxiRepository.findAll()).thenReturn(taxis);
+
+        assertThrows(RuntimeException.class, () -> bookingService.searchNearestTaxi(pickupLocation));
+        verify(taxiRepository, times(1)).findAll();
     }
     @Test
     void testCreateBooking(){
