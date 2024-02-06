@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import taxibooking.billingapplication.contract.response.SignUpResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class SignUpResponseTest {
     @Test
@@ -26,5 +27,25 @@ public class SignUpResponseTest {
                 .name("Sreejith")
                 .build();
         assertEquals(response.getName(),"Sreejith");
+    }
+    @Test
+    public void testCheckConstructor() {
+        SignUpResponse testResponse = new SignUpResponse(1L,"joe","joe@gmail.com","Joe@123");
+        SignUpResponse checkResponse = SignUpResponse.builder()
+                .id(1L)
+                .name("joe")
+                .email("joe@gmail.com")
+                .password("Joe@123")
+                .build();
+
+        assertEquals(testResponse.getName(), checkResponse.getName());
+        assertEquals(testResponse.getEmail(), checkResponse.getEmail());
+        assertEquals(testResponse.getPassword(),checkResponse.getPassword());
+    }
+    @Test
+    public void testDefaultConstructor() {
+        SignUpResponse response = new SignUpResponse();
+
+        assertNotNull(response);
     }
 }

@@ -1,5 +1,6 @@
 package taxibooking.billingapplication.contract.response;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter

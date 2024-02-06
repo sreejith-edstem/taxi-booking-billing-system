@@ -35,7 +35,7 @@ public class UserTest {
         assertEquals(user.getAccountBalance(),5689);
     }
     @Test
-    public void checkConstructor() {
+    public void testCheckConstructor() {
         User testUser = new User(1L,"joe","joe@gmail.com","Joe@123",4561);
         User checkUser = User.builder()
                 .id(1L)
