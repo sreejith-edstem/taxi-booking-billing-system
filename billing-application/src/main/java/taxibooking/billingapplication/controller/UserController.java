@@ -33,7 +33,7 @@ public class UserController {
         return userService.authenticate(request);
     }
 
-    @PutMapping("/{userId}/update")
+    @PutMapping("/balance/{userId}")
     public UpdateAccountResponse updateBalance(
             @PathVariable long userId, @RequestBody UpdateAccountRequest request) {
         return userService.updateBalance(userId, request);

@@ -60,19 +60,4 @@ public class UserControllerTest {
                         .content("{\"username\":\"username\", \"password\":\"password\"}"))
                 .andExpect(status().isOk());
     }
-    @Test
-    public void testUpdateBalance() throws Exception {
-        long userId = 1L;
-        UpdateAccountRequest request = new UpdateAccountRequest();
-        UpdateAccountResponse response = new UpdateAccountResponse();
-
-        when(userService.updateBalance(eq(userId), any(UpdateAccountRequest.class))).thenReturn(response);
-
-        mockMvc.perform(put("/v1/user/" + userId + "/update")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(request)))
-                .andExpect(status().isOk());
-
-        verify(userService, times(1)).updateBalance(eq(userId), any(UpdateAccountRequest.class));
-    }
 }

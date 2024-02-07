@@ -38,19 +38,19 @@ public class BookingControllerTest {
     void testViewBookingDetailsById() throws Exception {
         Long bookingId = 1L;
         mockMvc.perform(
-                        MockMvcRequestBuilders.get("/v1/user/booking/" + bookingId)
+                        MockMvcRequestBuilders.get("/v1/booking/" + bookingId)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
     @Test
     public void testCreateBooking() throws Exception {
         long userId = 1L;
-        BookingRequest bookingRequest = new BookingRequest("Aluva", "Kakkanad", 50.5, Status.CONFIRMED);
+        BookingRequest bookingRequest = new BookingRequest("Aluva", "Kakkanad", 50.5);
         BookingResponse bookingResponse = new BookingResponse(1L, "Aluva", "Kakkanad", 50.5, Status.CONFIRMED);
 
         when(bookingService.createBooking(anyLong(), any(BookingRequest.class))).thenReturn(bookingResponse);
 
-        mockMvc.perform(post("/v1/user/booking/{userId}/create", userId)
+        mockMvc.perform(post("/v1/booking/{userId}/create", userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(bookingRequest)))
                 .andExpect(status().isOk())
@@ -63,7 +63,7 @@ public class BookingControllerTest {
 
         when(bookingService.viewAllBookingDetails()).thenReturn(expectedResponses);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/user/booking")
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/booking")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedResponses)));
@@ -74,7 +74,7 @@ public class BookingControllerTest {
         double distance = 10.5;
 
         doNothing().when(bookingService).fareCalculation(userId, distance);
-        mockMvc.perform(post("/v1/user/booking/{userId}/fare", userId)
+        mockMvc.perform(post("/v1/booking/{userId}/fare", userId)
                         .param("distance", String.valueOf(distance))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -86,7 +86,7 @@ public class BookingControllerTest {
 
         when(bookingService.cancelBooking(id)).thenReturn(id);
 
-        mockMvc.perform(post("/v1/user/booking/cancel/" + id)
+        mockMvc.perform(post("/v1/booking/cancel/" + id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

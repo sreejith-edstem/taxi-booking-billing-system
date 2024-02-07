@@ -133,8 +133,8 @@ public class UserServiceTest {
     public void testUpdateBalance() {
         long id = 1L;
         User user = new User();
-        UpdateAccountRequest request = new UpdateAccountRequest();
-        UpdateAccountResponse expectedResponse = new UpdateAccountResponse();
+        UpdateAccountRequest request = new UpdateAccountRequest(50.5);
+        UpdateAccountResponse expectedResponse = new UpdateAccountResponse(50.5);
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
