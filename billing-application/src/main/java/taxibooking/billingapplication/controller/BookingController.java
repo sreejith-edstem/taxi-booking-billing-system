@@ -16,7 +16,7 @@ import taxibooking.billingapplication.contract.response.BookingResponse;
 import taxibooking.billingapplication.service.BookingService;
 
 @RestController
-@RequestMapping("/v1/user/booking")
+@RequestMapping("/v1/booking")
 @RequiredArgsConstructor
 public class BookingController {
     private final BookingService bookingService;

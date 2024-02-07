@@ -18,17 +18,17 @@ import taxibooking.billingapplication.contract.response.UpdateAccountResponse;
 import taxibooking.billingapplication.service.UserService;
 
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("/user/signup")
     public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest request) {
         return ResponseEntity.ok(userService.signUp(request));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         return userService.authenticate(request);
     }
