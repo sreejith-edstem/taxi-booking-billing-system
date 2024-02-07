@@ -1,6 +1,3 @@
-## README.md:
-
-#### Haven't added README.md
 
 ## Model class (Booking):
 
