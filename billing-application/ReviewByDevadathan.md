@@ -19,6 +19,14 @@
 
 #### In all repositories he had mentioned datatype as "Long" whereas in model class it's "long".
 
+## Booking Service:
+
+#### In line: 62,  For finding the nearest taxi location. He wrote a method for finding nearest taxi location and used an exception in the method. In line: 38, Called that method and again wrote same exception.
+
+### Cancel Booking (BookingService):
+
+#### For cancelling the booking, userId have to be added as a parameter. If we don't add the userId everyone can cancel the booking.
+
 ## Unit Testing:
 
 #### He had tested model class, request, response. I think testing service and controller class is enough.
