@@ -24,6 +24,9 @@
 2. In testViewBookingDetailsById() method, UserNotFoundException() is not tested.
 3. In testCancelBooking() method, BookingNotFoundException() is not tested.
 
+# application.yml
+1. Password, secret key should not be in application.yml.
+
 
 
 
