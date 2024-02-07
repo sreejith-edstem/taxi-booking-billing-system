@@ -9,5 +9,5 @@ import taxibooking.billingapplication.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
-    Optional<Object> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

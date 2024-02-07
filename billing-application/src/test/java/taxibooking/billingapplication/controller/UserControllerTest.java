@@ -10,19 +10,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import taxibooking.billingapplication.contract.request.LoginRequest;
 import taxibooking.billingapplication.contract.request.SignUpRequest;
-import taxibooking.billingapplication.contract.request.UpdateAccountRequest;
 import taxibooking.billingapplication.contract.response.LoginResponse;
 import taxibooking.billingapplication.contract.response.SignUpResponse;
-import taxibooking.billingapplication.contract.response.UpdateAccountResponse;
 import taxibooking.billingapplication.service.UserService;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest

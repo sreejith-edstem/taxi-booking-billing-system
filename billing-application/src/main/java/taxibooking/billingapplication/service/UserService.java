@@ -41,7 +41,6 @@ public class UserService {
 
     public LoginResponse authenticate(LoginRequest request) {
         User user =
-                (User)
                         userRepository
                                 .findByEmail(request.getEmail())
                                 .orElseThrow(() -> new InvalidLoginException("Invalid !!!.."));
