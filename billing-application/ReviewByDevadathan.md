@@ -1,3 +1,6 @@
+## Signup:
+
+#### While signing, password is displayed in the response.
 
 ## Model class (Booking):
 
