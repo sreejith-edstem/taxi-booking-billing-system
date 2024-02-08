@@ -5,22 +5,22 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import taxibooking.billingapplication.exception.UserNotFoundException;
+import taxibooking.billingapplication.model.User;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-import taxibooking.billingapplication.exception.UserNotFoundException;
-import taxibooking.billingapplication.model.User;
-
 @Service
 public class JwtService {
-    @Value("${security.jwt.secret-key}")
-    private String SECRET_KEY;
+
+    private static final String SECRET_KEY = System.getenv("SECRET_KEY");
+
     public static final long JWT_TOKEN_VALIDITY = 1000 * 60 * 60 * 24;
 
     public String extractUserName(String token) {
