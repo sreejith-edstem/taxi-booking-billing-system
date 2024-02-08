@@ -5,10 +5,8 @@
 
 # BookingService.class
 
-1. In line no.38 in the createBooking() method, If condition and exception is not needed.
-2. In the createBooking() method, taxis are assigned for booking based on the pickup location given in the request. However, if more than one taxi is present in the same location, only the first taxi is automatically assigned.
-3. In line no.86 in the fareCalculation() method, user not present exception is not handled.
-4. In fareCalculation()) method, when the fare exceeds the account balance, an exception should be thrown instead of using System.out.println().
+1. In the createBooking() method, taxis are assigned for booking based on the pickup location given in the request. However, if more than one taxi is present in the same location, only the first taxi is automatically assigned.
+2. In line no.86 in the fareCalculation() method, user not present exception is not handled.
 
 # UpdateAccountRequest.class
 
