@@ -3,9 +3,11 @@ package taxibooking.billingapplication.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,6 +24,8 @@ import org.modelmapper.ModelMapper;
 import taxibooking.billingapplication.constant.Status;
 import taxibooking.billingapplication.contract.request.BookingRequest;
 import taxibooking.billingapplication.contract.response.BookingResponse;
+import taxibooking.billingapplication.exception.BookingNotFoundException;
+import taxibooking.billingapplication.exception.UserNotFoundException;
 import taxibooking.billingapplication.model.Booking;
 import taxibooking.billingapplication.model.Taxi;
 import taxibooking.billingapplication.model.User;
@@ -57,28 +62,43 @@ public class BookingServiceTest {
         assertEquals(result, response);
         verify(bookingRepository, times(1)).findById(id);
     }
+    @Test
+    public void testViewBookingDetailsById_BookingNotFound() {
+        when(bookingRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        @Test
-        void testViewAllBookingDetails(){
-            Booking booking1 = new Booking();
-            Booking booking2 = new Booking();
-            List<Booking> bookings = Arrays.asList(booking1, booking2);
+        Long bookingId = 1L;
 
-            BookingResponse bookingResponse1 = new BookingResponse();
-            BookingResponse bookingResponse2 = new BookingResponse();
-            List<BookingResponse> expectedResponses = Arrays.asList(bookingResponse1, bookingResponse2);
+        assertThrows(BookingNotFoundException.class, () -> {
+            bookingService.viewBookingDetailsById(bookingId);
+        });
 
-            when(bookingRepository.findAll()).thenReturn(bookings);
-            when(modelMapper.map(booking1, BookingResponse.class)).thenReturn(bookingResponse1);
-            when(modelMapper.map(booking2, BookingResponse.class)).thenReturn(bookingResponse2);
+        verify(bookingRepository, times(1)).findById(bookingId);
 
-            List<BookingResponse> actualResponses = bookingService.viewAllBookingDetails();
+        verifyNoMoreInteractions(modelMapper);
+    }
 
-            assertEquals(expectedResponses, actualResponses);
-            verify(bookingRepository, times(1)).findAll();
-            verify(modelMapper, times(1)).map(booking1, BookingResponse.class);
-            verify(modelMapper, times(1)).map(booking2, BookingResponse.class);
-        }
+    @Test
+    void testViewAllBookingDetails() {
+        Booking booking1 = new Booking();
+        Booking booking2 = new Booking();
+        List<Booking> bookings = Arrays.asList(booking1, booking2);
+
+        BookingResponse bookingResponse1 = new BookingResponse();
+        BookingResponse bookingResponse2 = new BookingResponse();
+        List<BookingResponse> expectedResponses = Arrays.asList(bookingResponse1, bookingResponse2);
+
+        when(bookingRepository.findAll()).thenReturn(bookings);
+        when(modelMapper.map(booking1, BookingResponse.class)).thenReturn(bookingResponse1);
+        when(modelMapper.map(booking2, BookingResponse.class)).thenReturn(bookingResponse2);
+
+        List<BookingResponse> actualResponses = bookingService.viewAllBookingDetails();
+
+        assertEquals(expectedResponses, actualResponses);
+        verify(bookingRepository, times(1)).findAll();
+        verify(modelMapper, times(1)).map(booking1, BookingResponse.class);
+        verify(modelMapper, times(1)).map(booking2, BookingResponse.class);
+    }
+
     @Test
     void testCancelBooking() {
         Long bookingId = 1L;
@@ -92,6 +112,21 @@ public class BookingServiceTest {
         verify(bookingRepository, times(1)).findById(bookingId);
         verify(bookingRepository, times(1)).save(any(Booking.class));
     }
+    @Test
+    public void testCancelBooking_BookingNotFound() {
+        when(bookingRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        Long bookingId = 1L;
+
+        assertThrows(BookingNotFoundException.class, () -> {
+            bookingService.cancelBooking(bookingId);
+        });
+
+        verify(bookingRepository, times(1)).findById(bookingId);
+
+        verifyNoMoreInteractions(bookingRepository);
+    }
+
     @Test
     public void testSearchNearestTaxi() {
         String pickupLocation = "Test Location";
@@ -108,6 +143,7 @@ public class BookingServiceTest {
         verify(taxiRepository, times(1)).findAll();
         verify(modelMapper, times(2)).map(any(Taxi.class), eq(Taxi.class));
     }
+
     @Test
     public void testSearchNearestTaxi_NoTaxisAvailable() {
         String pickupLocation = "Test Location";
@@ -118,8 +154,9 @@ public class BookingServiceTest {
         assertThrows(RuntimeException.class, () -> bookingService.searchNearestTaxi(pickupLocation));
         verify(taxiRepository, times(1)).findAll();
     }
+
     @Test
-    void testCreateBooking(){
+    void testCreateBooking() {
         long userId = 1L;
         BookingRequest request = BookingRequest.builder()
                 .pickupLocation("Test Location")
@@ -159,7 +196,23 @@ public class BookingServiceTest {
         verify(modelMapper, times(1)).map(savedBooking, BookingResponse.class);
     }
     @Test
-    void testFareCalculation(){
+    public void testCreateBooking_UserNotFound() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        Long userId = 1L;
+        BookingRequest request = new BookingRequest("Ernakulam","Aluva",546);
+
+        assertThrows(UserNotFoundException.class, () -> {
+            bookingService.createBooking(userId, request);
+        });
+
+        verify(userRepository, times(1)).findById(userId);
+
+        verifyNoMoreInteractions(bookingRepository, modelMapper);
+    }
+
+    @Test
+    void testFareCalculation() {
         long userId = 1L;
         double distance = 10.0;
         double RATE_PER_KM = 5.0;

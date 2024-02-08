@@ -22,7 +22,7 @@ import taxibooking.billingapplication.constant.Status;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne private User userId;
     @ManyToOne private Taxi taxiId;

@@ -11,7 +11,7 @@ import taxibooking.billingapplication.constant.Status;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingResponse {
-    private long id;
+    private Long id;
     private String pickUpLocation;
     private String dropOffLocation;
     private double fare;
