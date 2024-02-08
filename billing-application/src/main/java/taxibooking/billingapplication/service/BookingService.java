@@ -38,9 +38,7 @@ public class BookingService {
                         .findById(userId)
                         .orElseThrow(() -> new UserNotFoundException("User not found"));
         List<Taxi> availableTaxis = searchNearestTaxi(request.getPickupLocation());
-        if (availableTaxis.isEmpty()) {
-            throw new RuntimeException("No taxis available at the pickup location");
-        }
+
         Taxi nearestTaxi = availableTaxis.get(0);
 
         Booking booking =
