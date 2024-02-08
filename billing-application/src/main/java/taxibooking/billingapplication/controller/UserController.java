@@ -35,7 +35,7 @@ public class UserController {
 
     @PutMapping("/balance/{userId}")
     public UpdateAccountResponse updateBalance(
-            @PathVariable long userId, @RequestBody UpdateAccountRequest request) {
+            @PathVariable Long userId, @RequestBody UpdateAccountRequest request) {
         return userService.updateBalance(userId, request);
     }
 }

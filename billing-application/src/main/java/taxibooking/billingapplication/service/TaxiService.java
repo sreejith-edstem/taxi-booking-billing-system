@@ -14,10 +14,6 @@ public class TaxiService {
     private final ModelMapper modelMapper;
 
     public Long addTaxi(TaxiRequest request) {
-        if (request == null) {
-            throw new IllegalArgumentException("Request cannot be null");
-        }
-
         Taxi taxi = taxiRepository.save(modelMapper.map(request, Taxi.class));
         return taxi.getId();
     }
