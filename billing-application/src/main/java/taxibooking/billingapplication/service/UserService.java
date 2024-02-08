@@ -12,6 +12,7 @@ import taxibooking.billingapplication.contract.response.LoginResponse;
 import taxibooking.billingapplication.contract.response.SignUpResponse;
 import taxibooking.billingapplication.contract.response.UpdateAccountResponse;
 import taxibooking.billingapplication.exception.InvalidLoginException;
+import taxibooking.billingapplication.exception.UserAlreadyExistsException;
 import taxibooking.billingapplication.exception.UserNotFoundException;
 import taxibooking.billingapplication.model.User;
 import taxibooking.billingapplication.repository.UserRepository;
@@ -27,7 +28,7 @@ public class UserService {
 
     public SignUpResponse signUp(SignUpRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Invalid Signup");
+            throw new UserAlreadyExistsException("user already exists..😒😒..try another one");
         }
         User user =
                 User.builder()
@@ -43,10 +44,10 @@ public class UserService {
         User user =
                         userRepository
                                 .findByEmail(request.getEmail())
-                                .orElseThrow(() -> new InvalidLoginException("Invalid !!!.."));
+                                .orElseThrow(() -> new InvalidLoginException("Invalid 🙄🙄..."));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Invalid credentials");
+            throw new BadCredentialsException("Invalid credentials..🙄🙄");
         }
 
         String jwtToken = jwtService.generateToken(user);
@@ -55,11 +56,11 @@ public class UserService {
     }
 
 
-    public UpdateAccountResponse updateBalance(long id, UpdateAccountRequest request) {
+    public UpdateAccountResponse updateBalance(Long id, UpdateAccountRequest request) {
         User user =
                 userRepository
                         .findById(id)
-                        .orElseThrow(() -> new UserNotFoundException("User not found"));
+                        .orElseThrow(() -> new UserNotFoundException("User not found..🙄🙄"));
         user =
                 User.builder()
                         .id(user.getId())

@@ -131,7 +131,7 @@ public class UserServiceTest {
     }
     @Test
     public void testUpdateBalance() {
-        long id = 1L;
+        Long id = 1L;
         User user = new User();
         UpdateAccountRequest request = new UpdateAccountRequest(50.5);
         UpdateAccountResponse expectedResponse = new UpdateAccountResponse(50.5);

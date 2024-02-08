@@ -23,12 +23,12 @@ public class BookingController {
 
     @PostMapping("/{userId}/create")
     public @ResponseBody BookingResponse createBooking(
-            @PathVariable long userId, @Valid @RequestBody BookingRequest request) {
+            @PathVariable Long userId, @Valid @RequestBody BookingRequest request) {
         return this.bookingService.createBooking(userId, request);
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody BookingResponse viewBookingDetailsById(@PathVariable long id) {
+    public @ResponseBody BookingResponse viewBookingDetailsById(@PathVariable Long id) {
         return bookingService.viewBookingDetailsById(id);
     }
 
@@ -38,12 +38,12 @@ public class BookingController {
     }
 
     @PostMapping("/{userId}/fare")
-    public void fareCalculation(@PathVariable long userId, @RequestParam double distance) {
+    public void fareCalculation(@PathVariable Long userId, @RequestParam double distance) {
         bookingService.fareCalculation(userId, distance);
     }
 
     @PostMapping("/cancel/{id}")
-    public long cancelBooking(@PathVariable long id) {
+    public long cancelBooking(@PathVariable Long id) {
         bookingService.cancelBooking(id);
         return id;
     }

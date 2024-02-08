@@ -32,7 +32,7 @@ public class UserControllerTest {
     void testSignUp() throws Exception {
 
         SignUpRequest signupRequest = new SignUpRequest("Midun", "midun@Gmail.com", "Midun@gmail.com");
-        SignUpResponse expectedResponse = new SignUpResponse(1L,"Midun", "midun@Gmail.com", "Midun@gmail.com");
+        SignUpResponse expectedResponse = new SignUpResponse(1L,"Midun", "midun@Gmail.com");
 
 
         when(userService.signUp(any(SignUpRequest.class))).thenReturn(expectedResponse);

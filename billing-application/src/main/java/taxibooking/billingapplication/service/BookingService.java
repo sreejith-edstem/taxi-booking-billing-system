@@ -32,11 +32,11 @@ public class BookingService {
 
     private static final double RATE_PER_KM = 0.5;
 
-    public BookingResponse createBooking(long userId, BookingRequest request) {
+    public BookingResponse createBooking(Long userId, BookingRequest request) {
         User user =
                 userRepository
                         .findById(userId)
-                        .orElseThrow(() -> new UserNotFoundException("User not found"));
+                        .orElseThrow(() -> new UserNotFoundException("User not found..🙄🙄"));
         List<Taxi> availableTaxis = searchNearestTaxi(request.getPickupLocation());
 
         Taxi nearestTaxi = availableTaxis.get(0);
@@ -61,18 +61,18 @@ public class BookingService {
                         .filter(taxi -> taxi.getCurrentLocation().equals(pickupLocation))
                         .collect(Collectors.toList());
         if (availableTaxis.isEmpty()) {
-            throw new RuntimeException("No taxis available at the pickup location");
+            throw new RuntimeException("😒😒No taxis available at the pickup location");
         }
         return availableTaxis.stream()
                 .map(taxi -> modelMapper.map(taxi, Taxi.class))
                 .collect(Collectors.toList());
     }
 
-    public BookingResponse viewBookingDetailsById(long id) {
+    public BookingResponse viewBookingDetailsById(Long id) {
         Booking booking =
                 bookingRepository
                         .findById(id)
-                        .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
+                        .orElseThrow(() -> new BookingNotFoundException("Booking not found..🙄🙄"));
         return modelMapper.map(booking, BookingResponse.class);
     }
 
@@ -83,8 +83,9 @@ public class BookingService {
                 .collect(Collectors.toList());
     }
 
-    public void fareCalculation(long userId, double distance) {
-        Optional<User> user = userRepository.findById(userId);
+    public void fareCalculation(Long userId, double distance) {
+        Optional<User> user = Optional.ofNullable(userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found..🙄🙄")));
         double accountBalance = user.get().getAccountBalance();
         double fare = distance * RATE_PER_KM;
 
@@ -105,11 +106,11 @@ public class BookingService {
         }
     }
 
-    public long cancelBooking(long bookingId) {
+    public long cancelBooking(Long bookingId) {
         Booking booking =
                 bookingRepository
                         .findById(bookingId)
-                        .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
+                        .orElseThrow(() -> new BookingNotFoundException("Booking not found..🙄🙄"));
         booking =
                 Booking.builder()
                         .id(booking.getId())
@@ -124,4 +125,5 @@ public class BookingService {
         bookingRepository.save(booking);
         return bookingId;
     }
+
 }
