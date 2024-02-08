@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import taxibooking.billingapplication.constant.Status;
 import taxibooking.billingapplication.contract.request.BookingRequest;
 import taxibooking.billingapplication.contract.response.BookingResponse;
 import taxibooking.billingapplication.exception.BookingNotFoundException;
+import taxibooking.billingapplication.exception.InsufficientBalanceException;
 import taxibooking.billingapplication.exception.UserNotFoundException;
 import taxibooking.billingapplication.model.Booking;
 import taxibooking.billingapplication.model.Taxi;
@@ -20,6 +22,7 @@ import taxibooking.billingapplication.repository.TaxiRepository;
 import taxibooking.billingapplication.repository.UserRepository;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BookingService {
     private final BookingRepository bookingRepository;
@@ -98,9 +101,9 @@ public class BookingService {
                             .accountBalance(newBalance)
                             .build();
             userRepository.save(user1);
-            System.out.println("Ride completed");
+            log.info("Ride completed");
         } else {
-            System.out.println("Insufficient balance");
+            throw new InsufficientBalanceException("Insufficient balance");
         }
     }
 
