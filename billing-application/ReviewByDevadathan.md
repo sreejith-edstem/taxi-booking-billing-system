@@ -3,7 +3,7 @@
 
 #### 1)" private long id; "
 
-#### Mentioned id with datatype as "long". I think it's better to use "Louble". As "louble" is a primitive datatype whereas the "Louble" class wraps a value of the primitive type double in an object.
+#### Mentioned id with datatype as "long". I think it's better to use "Long". As "long" is a primitive datatype whereas the "Long" class wraps a value of the primitive type double in an object.
 
 #### 2)" private double fare; "
 
