@@ -20,7 +20,6 @@ import java.util.function.Function;
 public class JwtService {
 
     private static final String SECRET_KEY = System.getenv("SECRET_KEY");
-
     public static final long JWT_TOKEN_VALIDITY = 1000 * 60 * 60 * 24;
 
     public String extractUserName(String token) {
