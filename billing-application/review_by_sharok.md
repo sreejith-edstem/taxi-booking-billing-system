@@ -22,6 +22,8 @@
 2. In testViewBookingDetailsById() method, UserNotFoundException() is not tested.
 3. In testCancelBooking() method, BookingNotFoundException() is not tested.
 
+   ### All review comments resolved
+
 
 
 
