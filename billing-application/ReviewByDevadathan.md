@@ -22,3 +22,6 @@
 ## Unit Testing:
 
 #### He had tested model class, request, response. I think testing service and controller class is enough.
+
+
+### All review comments resolved
